@@ -1,0 +1,39 @@
+# Project Rules - 0G Hackathon Cannes
+
+## Workflow
+1. ALWAYS plan before coding. Update plan.md with checklist.
+2. One feature at a time. Complete -> Test -> Next.
+3. Commit after each working feature.
+4. Test as you go - don't build a mountain then test.
+
+## Code Style
+- TypeScript strict mode
+- Functional components (React)
+- Tailwind CSS for styling
+- File names: kebab-case
+- Components: PascalCase
+- API routes: /api/v1/resource
+
+## Don'ts
+- Never use `any` type
+- No console.log in production code
+- Don't install new dependencies without asking
+- Don't over-engineer - MVP first, scale later
+
+## Security (check every feature)
+- Input validation on user-facing endpoints
+- No secrets in code (use .env)
+- Rate limiting on public APIs
+- Sanitize outputs (XSS prevention)
+
+## 0G Network
+- Testnet RPC: https://evmrpc-testnet.0g.ai (Chain ID: 16602)
+- Mainnet RPC: https://evmrpc.0g.ai (Chain ID: 16661)
+- Storage SDK: @0gfoundation/0g-ts-sdk
+- Docs: https://docs.0g.ai
+- AI Context: https://docs.0g.ai/ai-context
+
+## When Stuck
+- Ask AI to debug its own output with the error message
+- Explain root cause before fixing
+- If prompted 5+ times for same thing, do it manually
