@@ -4,7 +4,7 @@ import React from "react";
 import { useAccount } from 'wagmi';
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { MessageSquare, Wallet, Image, Mic, ArrowRight, Sparkles } from "lucide-react";
+import { MessageSquare, Wallet, Image, Mic, ArrowRight, Sparkles, HardDrive, FileText } from "lucide-react";
 import { OnboardingFlow } from "@/components/ui/onboarding-flow";
 import { use0GBroker } from "../shared/hooks/use0GBroker";
 
@@ -35,17 +35,17 @@ export default function Home() {
       <div className="text-center mb-10 sm:mb-16">
         <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-secondary border border-primary/20 mb-6">
           <Sparkles className="w-4 h-4 text-primary" />
-          <span className="text-sm font-medium text-primary">Decentralized AI Infrastructure</span>
+          <span className="text-sm font-medium text-primary">Powered by 0G Network</span>
         </div>
 
         <h1 className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight mb-6">
-          <span className="text-foreground">The Future of </span>
-          <span className="bg-gradient-brand bg-clip-text text-transparent">AI Computing</span>
+          <span className="text-foreground">0G </span>
+          <span className="bg-gradient-brand bg-clip-text text-transparent">DocMind</span>
         </h1>
 
         <p className="max-w-2xl mx-auto text-base sm:text-lg text-muted-foreground mb-8 px-2">
-          Access powerful AI models through a decentralized network.
-          Chat, generate images, and transcribe audio with complete privacy and control.
+          Upload documents to decentralized storage and chat with them using AI.
+          Powered by 0G Storage and 0G Compute — private, censorship-resistant, 95% cheaper than cloud.
         </p>
 
         {/* Only show these buttons if user has completed onboarding */}
@@ -81,7 +81,31 @@ export default function Home() {
       )}
 
       {/* Feature Cards */}
-      <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 max-w-5xl mx-auto">
+      <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 max-w-4xl mx-auto mb-12">
+        <Card className="group cursor-pointer hover:shadow-glow transition-all duration-300 sm:col-span-2 lg:col-span-1" onClick={() => window.location.href = '/storage'}>
+          <CardContent className="p-6">
+            <div className="w-12 h-12 rounded-xl bg-gradient-brand flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
+              <HardDrive className="w-6 h-6 text-white" />
+            </div>
+            <h3 className="font-semibold text-foreground mb-2">Upload Documents</h3>
+            <p className="text-sm text-muted-foreground">
+              Store PDF, TXT, MD files on 0G decentralized storage
+            </p>
+          </CardContent>
+        </Card>
+
+        <Card className="group cursor-pointer hover:shadow-glow transition-all duration-300" onClick={() => window.location.href = '/storage'}>
+          <CardContent className="p-6">
+            <div className="w-12 h-12 rounded-xl bg-gradient-brand flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
+              <FileText className="w-6 h-6 text-white" />
+            </div>
+            <h3 className="font-semibold text-foreground mb-2">Chat with Documents</h3>
+            <p className="text-sm text-muted-foreground">
+              Ask questions, summarize, and extract insights from your files
+            </p>
+          </CardContent>
+        </Card>
+
         <Card className="group cursor-pointer hover:shadow-glow transition-all duration-300" onClick={() => window.location.href = '/inference/chat'}>
           <CardContent className="p-6">
             <div className="w-12 h-12 rounded-xl bg-gradient-brand flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
@@ -89,11 +113,14 @@ export default function Home() {
             </div>
             <h3 className="font-semibold text-foreground mb-2">AI Chat</h3>
             <p className="text-sm text-muted-foreground">
-              Conversational AI with multiple models
+              Conversational AI with decentralized providers
             </p>
           </CardContent>
         </Card>
+      </div>
 
+      {/* Secondary features */}
+      <div className="grid sm:grid-cols-3 gap-4 max-w-4xl mx-auto">
         <Card className="group cursor-pointer hover:shadow-glow transition-all duration-300" onClick={() => window.location.href = '/inference/image-gen'}>
           <CardContent className="p-6">
             <div className="w-12 h-12 rounded-xl bg-gradient-brand flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
