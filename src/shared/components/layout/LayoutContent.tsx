@@ -397,6 +397,12 @@ export const LayoutContent: React.FC<LayoutContentProps> = ({ children }) => {
                 `Create Account with ${initialDeposit} 0G`
               )}
             </button>
+            <button
+              onClick={() => setShowDepositModal(false)}
+              className="w-full mt-2 px-4 py-3 text-gray-500 text-sm font-medium rounded-lg hover:bg-gray-100 transition-colors"
+            >
+              Skip for now
+            </button>
           </div>
         </div>
       )}

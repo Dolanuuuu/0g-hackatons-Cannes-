@@ -2,8 +2,14 @@ import { Indexer } from '@0gfoundation/0g-ts-sdk';
 import { BrowserProvider, JsonRpcSigner } from 'ethers';
 
 const INDEXER_URLS = {
-  testnet: 'https://indexer-storage-testnet-turbo.0g.ai',
-  mainnet: 'https://indexer-storage-turbo.0g.ai',
+  testnet: [
+    'https://indexer-storage-testnet-turbo.0g.ai',
+    'https://indexer-storage-testnet-standard.0g.ai',
+  ],
+  mainnet: [
+    'https://indexer-storage-turbo.0g.ai',
+    'https://indexer-storage-standard.0g.ai',
+  ],
 } as const;
 
 const RPC_URLS = {
@@ -21,8 +27,8 @@ export interface UploadResult {
   uploadedAt: number;
 }
 
-function getIndexer(network: NetworkType): Indexer {
-  return new Indexer(INDEXER_URLS[network]);
+function getIndexerUrls(network: NetworkType): readonly string[] {
+  return INDEXER_URLS[network];
 }
 
 function getRpcUrl(network: NetworkType): string {
@@ -45,8 +51,8 @@ export async function uploadFile(
   const { Blob: ZgBlob } = await import('@0gfoundation/0g-ts-sdk');
 
   const signer = await getEthersSigner();
-  const indexer = getIndexer(network);
   const rpcUrl = getRpcUrl(network);
+  const indexerUrls = getIndexerUrls(network);
 
   const zgBlob = new ZgBlob(file);
   const [tree, treeErr] = await zgBlob.merkleTree();
@@ -56,20 +62,29 @@ export async function uploadFile(
 
   const rootHash = tree?.rootHash() ?? '';
 
-  const [tx, uploadErr] = await indexer.upload(zgBlob, rpcUrl, signer);
-  if (uploadErr !== null) {
-    throw new Error(`Upload error: ${uploadErr}`);
+  let lastErr: unknown;
+  for (const url of indexerUrls) {
+    try {
+      const indexer = new Indexer(url);
+      const [tx, uploadErr] = await indexer.upload(zgBlob, rpcUrl, signer);
+      if (uploadErr !== null) {
+        lastErr = uploadErr;
+        continue;
+      }
+      const txHash = 'txHash' in tx ? (tx.txHash as string) : '';
+      return {
+        rootHash,
+        txHash,
+        fileName: file.name,
+        fileSize: file.size,
+        uploadedAt: Date.now(),
+      };
+    } catch (err) {
+      lastErr = err;
+    }
   }
 
-  const txHash = 'txHash' in tx ? (tx.txHash as string) : '';
-
-  return {
-    rootHash,
-    txHash,
-    fileName: file.name,
-    fileSize: file.size,
-    uploadedAt: Date.now(),
-  };
+  throw new Error(`Upload failed on all indexers: ${lastErr}`);
 }
 
 export async function uploadText(
@@ -80,8 +95,8 @@ export async function uploadText(
   const { MemData } = await import('@0gfoundation/0g-ts-sdk');
 
   const signer = await getEthersSigner();
-  const indexer = getIndexer(network);
   const rpcUrl = getRpcUrl(network);
+  const indexerUrls = getIndexerUrls(network);
 
   const data = new TextEncoder().encode(text);
   const memData = new MemData(data);
@@ -93,18 +108,27 @@ export async function uploadText(
 
   const rootHash = tree?.rootHash() ?? '';
 
-  const [tx, uploadErr] = await indexer.upload(memData, rpcUrl, signer);
-  if (uploadErr !== null) {
-    throw new Error(`Upload error: ${uploadErr}`);
+  let lastErr: unknown;
+  for (const url of indexerUrls) {
+    try {
+      const indexer = new Indexer(url);
+      const [tx, uploadErr] = await indexer.upload(memData, rpcUrl, signer);
+      if (uploadErr !== null) {
+        lastErr = uploadErr;
+        continue;
+      }
+      const txHash = 'txHash' in tx ? (tx.txHash as string) : '';
+      return {
+        rootHash,
+        txHash,
+        fileName,
+        fileSize: data.byteLength,
+        uploadedAt: Date.now(),
+      };
+    } catch (err) {
+      lastErr = err;
+    }
   }
 
-  const txHash = 'txHash' in tx ? (tx.txHash as string) : '';
-
-  return {
-    rootHash,
-    txHash,
-    fileName,
-    fileSize: data.byteLength,
-    uploadedAt: Date.now(),
-  };
+  throw new Error(`Upload failed on all indexers: ${lastErr}`);
 }
