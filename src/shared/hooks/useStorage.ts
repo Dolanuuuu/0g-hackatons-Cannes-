@@ -4,6 +4,7 @@ import { useState, useCallback, useEffect } from 'react';
 import { useAccount } from 'wagmi';
 import { dbManager, type StoredFile } from '../lib/database';
 import { uploadFile as uploadToStorage, type NetworkType, type UploadResult } from '../lib/storage';
+import { extractTextFromFile, isTextExtractable } from '../lib/document-parser';
 
 export function useStorage(network: NetworkType = 'testnet') {
   const { address } = useAccount();
@@ -42,10 +43,14 @@ export function useStorage(network: NetworkType = 'testnet') {
     setUploadError(null);
 
     try {
-      // Extract text content for PDF/TXT files
+      // Extract text content for supported file types (PDF, TXT, MD, etc.)
       let textContent: string | undefined;
-      if (file.type === 'text/plain' || file.name.endsWith('.txt') || file.name.endsWith('.md')) {
-        textContent = await file.text();
+      if (isTextExtractable(file.name)) {
+        try {
+          textContent = await extractTextFromFile(file);
+        } catch {
+          // Text extraction failed - file still uploads, just without text content
+        }
       }
 
       const result = await uploadToStorage(file, network);

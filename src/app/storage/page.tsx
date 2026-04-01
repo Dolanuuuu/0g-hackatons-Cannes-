@@ -1,15 +1,21 @@
 "use client";
 
+import { useCallback } from "react";
 import { useAccount } from "wagmi";
 import { HardDrive } from "lucide-react";
 import { useStorage } from "@/shared/hooks/useStorage";
 import { FileUpload } from "./components/FileUpload";
 import { FileList } from "./components/FileList";
+import { type StoredFile } from "@/shared/lib/database";
 
 export default function StoragePage() {
   const { isConnected } = useAccount();
   const { files, isUploading, uploadError, isLoading, upload, removeFile } =
     useStorage("testnet");
+
+  const handleChatWith = useCallback((file: StoredFile) => {
+    window.location.href = `/storage/chat?fileId=${file.id}`;
+  }, []);
 
   if (!isConnected) {
     return (
@@ -46,6 +52,7 @@ export default function StoragePage() {
         files={files}
         isLoading={isLoading}
         onDelete={removeFile}
+        onChatWith={handleChatWith}
       />
     </div>
   );
