@@ -160,7 +160,7 @@ const zgBlob = new ZgBlob(fileInput.files[0]);
 const [tree, err] = await zgBlob.merkleTree();
 const [tx, uploadErr] = await indexer.upload(zgBlob, RPC_URL, signer);
 ```
-NOTE: Browser downloads don't work with indexer.download() (uses fs). Use StorageNode.downloadSegmentByTxSeq() instead. See starter kit web/src/storage.ts.
+NOTE: Browser downloads don't work with indexer.download() (uses fs). Use StorageNode.downloadSegmentByTxSeq() instead.
 
 ### KV Store (TypeScript)
 ```typescript
@@ -234,31 +234,15 @@ response = client.chat.completions.create(
 )
 ```
 
-### CLI Commands
-```bash
-pnpm add @0glabs/0g-serving-broker -g
-0g-compute-cli setup-network
-0g-compute-cli login
-0g-compute-cli deposit --amount 100
-0g-compute-cli inference list-providers
-0g-compute-cli inference get-secret --provider <ADDRESS>
-0g-compute-cli inference serve --provider <ADDRESS>
-```
-
 ### Account Requirements
 - Minimum ledger deposit: 3 0G
 - Minimum provider sub-account: 1 0G per provider
 - Web UI: https://compute-marketplace.0g.ai/inference
 
 ### Fine-tuning
-```bash
-0g-compute-cli fine-tuning upload-data --file dataset.jsonl
-0g-compute-cli fine-tuning create-task --model Qwen2.5-0.5B-Instruct --dataset <ID> --provider <ADDR>
-0g-compute-cli fine-tuning get-task --task-id <ID>
-```
 - Models: Qwen2.5-0.5B-Instruct (0.5 0G/1M tokens), Qwen3-32B (4 0G/1M tokens)
 - Dataset: JSONL format, UTF-8, min 10 examples
-- 48h deadline to download after "Delivered" status (30% fee if missed)
+- 48h deadline to download after "Delivered" status
 - Output: LoRA adapters (use with base model + PEFT library)
 
 ### Starter Kit
@@ -266,22 +250,10 @@ pnpm add @0glabs/0g-serving-broker -g
 
 ---
 
-## 0G DA (Data Availability)
-- 50 Gbps throughput on testnet
-- Max blob size: 32,505,852 bytes
-- Used by rollups (Polygon, Optimism, Arbitrum, Fuel, Manta)
-- Requires running DA Client + Encoder nodes (heavy infra)
-- Less relevant for hackathon app-level projects
-
----
-
 ## INFT (ERC-7857) - Intelligent NFTs
 - Tokenized AI agents with encrypted metadata
 - Secure transfer: ownership + encrypted AI data transfer together
 - Oracle verification: TEE or ZKP proof validation
-- Clone function: duplicate AI agent as new NFT
-- Authorized usage: grant access without ownership transfer
-- Uses 0G Storage for encrypted metadata, 0G Compute for secure inference
 - Reference: https://github.com/0gfoundation/0g-agent-nft/tree/eip-7857-draft
 
 ---
