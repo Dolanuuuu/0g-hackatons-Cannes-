@@ -1,0 +1,115 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* 0G Brand Color Palette */
+    --og-purple: 289 100% 44%; /* #9200E1 - Primary brand purple */
+    --og-purple-light: 271 100% 69%; /* #B75FFF */
+    --og-purple-lighter: 271 100% 77%; /* #CB8AFF */
+    --og-purple-lightest: 271 100% 82%; /* #D5A3FF */
+    --og-purple-pale: 271 100% 88%; /* #E3C1FF */
+    --og-black: 0 0% 0%; /* #000000 */
+    --og-white: 0 0% 100%; /* #FEFEFE */
+    --og-gray: 0 0% 90%; /* #E5E5E5 */
+
+    --background: 0 0% 100%;
+    --foreground: 0 0% 0%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 9%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 9%;
+
+    --primary: 289 100% 44%; /* 0G Purple #9200E1 */
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 271 60% 97%; /* Very light purple tint */
+    --secondary-foreground: 289 100% 44%;
+
+    --muted: 271 20% 96%;
+    --muted-foreground: 0 0% 40%;
+
+    --accent: 271 100% 88%; /* #E3C1FF */
+    --accent-foreground: 289 100% 35%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 271 30% 90%;
+    --input: 271 30% 90%;
+    --ring: 289 100% 44%;
+
+    --radius: 0.75rem;
+  }
+
+  .dark {
+    --background: 0 0% 2%; /* Near black per brand */
+    --foreground: 0 0% 98%;
+
+    --card: 260 20% 6%; /* Very dark purple-tinted black */
+    --card-foreground: 0 0% 98%;
+
+    --popover: 260 20% 8%;
+    --popover-foreground: 0 0% 98%;
+
+    --primary: 271 100% 69%; /* Lighter purple for dark mode #B75FFF */
+    --primary-foreground: 0 0% 0%;
+
+    --secondary: 260 30% 15%;
+    --secondary-foreground: 271 100% 82%;
+
+    --muted: 260 20% 12%;
+    --muted-foreground: 0 0% 65%;
+
+    --accent: 289 80% 50%;
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 62% 50%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 260 30% 20%;
+    --input: 260 30% 20%;
+    --ring: 271 100% 69%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+/* Custom scrollbar styles for dark mode */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: hsl(var(--muted-foreground)) hsl(var(--muted));
+}
+
+*::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+*::-webkit-scrollbar-track {
+  background: hsl(var(--muted));
+  border-radius: 4px;
+}
+
+*::-webkit-scrollbar-thumb {
+  background: hsl(var(--muted-foreground));
+  border-radius: 4px;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background: hsl(var(--foreground));
+}
+
+*::-webkit-scrollbar-corner {
+  background: hsl(var(--muted));
+}

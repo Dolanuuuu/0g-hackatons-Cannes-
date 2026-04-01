@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import localFont from "next/font/local";
 import { Suspense } from "react";
 import "./globals.css";
 import { Providers } from "../../Providers";
@@ -8,23 +7,9 @@ import { Sidebar } from "../shared/components/layout/Sidebar";
 import { LayoutContent } from "../shared/components/layout/LayoutContent";
 import { Toaster } from "@/components/ui/toaster";
 
-const sans = localFont({
-  src: [{ path: "./fonts/GeistVF.woff2", style: "normal" }],
-  variable: "--font-sans",
-  display: "swap",
-  fallback: ["system-ui", "Arial", "sans-serif"],
-});
-
-const mono = localFont({
-  src: [{ path: "./fonts/GeistMonoVF.woff2", style: "normal" }],
-  variable: "--font-mono",
-  display: "swap",
-  fallback: ["ui-monospace", "monospace"],
-});
-
 export const metadata: Metadata = {
-  title: "0G Compute Network Example",
-  description: "Web example for 0G Compute Network SDK",
+  title: "0G DocMind",
+  description: "Decentralized AI Document Intelligence powered by 0G",
   icons: {
     icon: "/favicon.svg",
   },
@@ -42,7 +27,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${sans.variable} ${mono.variable}`}>
+    <html lang="en">
       <body className="font-sans antialiased">
         <Providers>
           <div className="flex min-h-screen w-full flex-col bg-background">
