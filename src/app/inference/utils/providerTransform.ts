@@ -49,13 +49,26 @@ export function transformBrokerServiceToProvider(service: unknown): Provider {
   const serviceUrl = serviceObj.url || "";
 
   // Convert prices from neuron to 0G
-  // For text-to-image services, prices are per image, not per million tokens
-  const priceMultiplier = serviceObj.serviceType === 'text-to-image' ? BigInt(1) : BigInt(1000000);
-  const inputPrice = serviceObj.inputPrice
-    ? neuronToA0gi(serviceObj.inputPrice * priceMultiplier)
+  // For text-to-image: price is per image, no multiplier needed
+  // For chatbot/speech-to-text: price is per token, multiply by 1M to show "per million tokens"
+  const isPerImage = serviceObj.serviceType === 'text-to-image' ||
+    serviceObj.name?.toLowerCase().includes('image');
+  const priceMultiplier = isPerImage ? BigInt(1) : BigInt(1000000);
+
+  // Safely convert inputPrice to BigInt (handle string/number/bigint)
+  const toBigInt = (val: bigint | string | number | undefined): bigint | undefined => {
+    if (val === undefined) return undefined;
+    try { return BigInt(val); } catch { return undefined; }
+  };
+
+  const inputPriceBig = toBigInt(serviceObj.inputPrice);
+  const outputPriceBig = toBigInt(serviceObj.outputPrice);
+
+  const inputPrice = inputPriceBig !== undefined
+    ? neuronToA0gi(inputPriceBig * priceMultiplier)
     : undefined;
-  const outputPrice = serviceObj.outputPrice
-    ? neuronToA0gi(serviceObj.outputPrice * priceMultiplier)
+  const outputPrice = outputPriceBig !== undefined
+    ? neuronToA0gi(outputPriceBig * priceMultiplier)
     : undefined;
 
   return {
@@ -66,8 +79,8 @@ export function transformBrokerServiceToProvider(service: unknown): Provider {
     url: serviceUrl,
     inputPrice,
     outputPrice,
-    inputPriceNeuron: serviceObj.inputPrice ? BigInt(serviceObj.inputPrice) : undefined,
-    outputPriceNeuron: serviceObj.outputPrice ? BigInt(serviceObj.outputPrice) : undefined,
+    inputPriceNeuron: inputPriceBig,
+    outputPriceNeuron: outputPriceBig,
     teeSignerAcknowledged: serviceObj.teeSignerAcknowledged ?? false,
     serviceType: serviceObj.serviceType, // Pass through for UI conditional rendering
   };
